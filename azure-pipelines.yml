@@ -13,14 +13,26 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- script: sudo apt-get update && sudo apt-get install wget zip unzip python2.7 python-pip -y
+  displayName: Install packages
+- script: sudo pip install awscli
+  displayName: Install awscli
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 # ...
 # do this after you've built your app, near the end of your pipeline in most cases
 # for example, you do this before you deploy to an Azure web app on Windows
+- script: |
+    pwd
+    ls
+  displayName: pwd and ls
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
+- script: |
+    pwd
+    ls
+  displayName: pwd and ls
