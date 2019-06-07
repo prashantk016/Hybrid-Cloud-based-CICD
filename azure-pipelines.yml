@@ -11,6 +11,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  publish_path: 'codedeploy_artifact'
+  
 
 steps:
 - script: sudo apt-get update && sudo apt-get install wget zip unzip python2.7 python-pip -y
@@ -25,14 +27,24 @@ steps:
 - script: |
     pwd
     ls
+    mkdir codedeploy_artifact
   displayName: pwd and ls
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
     publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration $(BuildConfiguration) --output $(publish_path)'
     zipAfterPublish: True
 - script: |
     pwd
     ls
+    ls -alh codedeploy_artifact/
   displayName: pwd and ls
+- script: aws s3 sync codedeploy_artifact s3://$(BUCKET_NAME)
+  displayName: Upload artifact to s3
+- script: |
+     --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name csye7220-webapp-deployment \
+            --description "CSYE7220 - CodeDeploy" \
+            --s3-location bucket=$(BUCKET_NAME),key=csye6225-web-app.zip,bundleType=zip
+  displayName: Trigger AWS CodeDeploy
