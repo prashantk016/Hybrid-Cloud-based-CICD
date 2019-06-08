@@ -11,7 +11,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  publish_path: 'codedeploy_artifact'
+  publish_path: 'published'
   
 
 steps:
@@ -28,23 +28,39 @@ steps:
     pwd
     ls
     mkdir codedeploy_artifact
+    mkdir published
   displayName: pwd and ls
+
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(publish_path)'
-    zipAfterPublish: True
+    zipAfterPublish: true
+
 - script: |
     pwd
-    ls -alh codedeploy_artifact/
-    aws sts get-caller-identity
-  displayName: pwd and ls
-- script: aws s3 sync codedeploy_artifact s3://$(BUCKET_NAME)
-  displayName: Upload artifact to s3
+    ls -alh published/
+  displayName: pwd and ls 
+
 - script: |
-     --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name csye7220-webapp-deployment \
-            --description "CSYE7220 - CodeDeploy" \
-            --s3-location bucket=$(BUCKET_NAME),key=csye6225-web-app.zip,bundleType=zip
-  displayName: Trigger AWS CodeDeploy
+    zip -r csye7220-$(Build.BuildId).zip published/*.zip appspec.yml codeploy/*
+    mv csye7220-$(Build.BuildId).zip codedeploy_artifact/
+    ls codedeploy_artifact/
+  displayName: Zip Artifacts
+
+- task: AWSCLI@1
+  inputs:
+    awsCredentials: 'awsservice'
+    regionName: 'us-east-1'
+    awsCommand: 's3 sync codedeploy_artifact s3://$(BUCKET_NAME)'
+
+- task: CodeDeployDeployApplication@1
+  inputs:
+    awsCredentials: 'awsservice'
+    regionName: 'us-east-1'
+    applicationName: 'csye7220-webapp'
+    deploymentGroupName: 'csye7220-webapp-deployment'
+    deploymentRevisionSource: 's3'
+    bucketName: $(BUCKET_NAME)
+    bundleKey: 'csye7220-web-app.zip'
