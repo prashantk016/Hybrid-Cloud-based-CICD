@@ -1,0 +1,22 @@
+version: 0.0
+os: linux
+files:
+  - source: webapp/CloudWebApp/target/ROOT.war
+    destination: /opt/tomcat/webapps
+hooks:
+  AfterInstall:
+   - location: ./infrastructure/aws/codedeploy/afterInstall.sh
+     timeout: 300
+     runas: ubuntu
+  BeforeInstall:
+     - location: ./infrastructure/aws/codedeploy/beforeinstall.sh
+       timeout: 300
+       runas: ubuntu
+  ApplicationStart:
+   - location: ./infrastructure/aws/codedeploy/applicationStart.sh
+     timeout: 300
+     runas: ubuntu
+  ApplicationStop:
+   - location: ./infrastructure/aws/codedeploy/applicationStop.sh
+     timeout: 300
+     runas: ubuntu
