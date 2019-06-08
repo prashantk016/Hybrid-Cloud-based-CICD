@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: webapp/CloudWebApp/target/ROOT.war
-    destination: /opt/tomcat/webapps
+  - source: published/s.zip
+    destination: /app
 hooks:
   AfterInstall:
    - location: ./infrastructure/aws/codedeploy/afterInstall.sh
