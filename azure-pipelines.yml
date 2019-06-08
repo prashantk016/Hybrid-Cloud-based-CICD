@@ -53,7 +53,9 @@ steps:
   inputs:
     awsCredentials: 'awsservice'
     regionName: 'us-east-1'
-    awsCommand: 's3 sync codedeploy_artifact s3://$(BUCKET_NAME)'
+    awsCommand: 's3'
+    awsSubCommand: 'sync'
+    awsArguments: 'codedeploy_artifact s3://$(BUCKET_NAME)'
 
 - task: CodeDeployDeployApplication@1
   inputs:
@@ -63,4 +65,4 @@ steps:
     deploymentGroupName: 'csye7220-webapp-deployment'
     deploymentRevisionSource: 's3'
     bucketName: $(BUCKET_NAME)
-    bundleKey: 'csye7220-web-app.zip'
+    bundleKey: 'csye7220-$(Build.BuildId).zip'
