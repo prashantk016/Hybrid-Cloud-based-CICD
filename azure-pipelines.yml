@@ -44,7 +44,7 @@ steps:
   displayName: pwd and ls 
 
 - script: |
-    zip -r csye7220-$(Build.BuildId).zip published/*.zip appspec.yml codeploy/*
+    zip -r csye7220-$(Build.BuildId).zip published/*.zip appspec.yml codedeploy/*
     mv csye7220-$(Build.BuildId).zip codedeploy_artifact/
     ls codedeploy_artifact/
   displayName: Zip Artifacts
