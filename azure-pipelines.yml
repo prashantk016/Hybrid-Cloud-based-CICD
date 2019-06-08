@@ -37,8 +37,8 @@ steps:
     zipAfterPublish: True
 - script: |
     pwd
-    ls
     ls -alh codedeploy_artifact/
+    aws sts get-caller-identity
   displayName: pwd and ls
 - script: aws s3 sync codedeploy_artifact s3://$(BUCKET_NAME)
   displayName: Upload artifact to s3
