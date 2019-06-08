@@ -5,18 +5,18 @@ files:
     destination: /app
 hooks:
   AfterInstall:
-   - location: ./infrastructure/aws/codedeploy/afterInstall.sh
+   - location: ./codedeploy/afterInstall.sh
      timeout: 300
      runas: ubuntu
   BeforeInstall:
-     - location: ./infrastructure/aws/codedeploy/beforeinstall.sh
+     - location: ./codedeploy/beforeinstall.sh
        timeout: 300
        runas: ubuntu
   ApplicationStart:
-   - location: ./infrastructure/aws/codedeploy/applicationStart.sh
+   - location: ./codedeploy/applicationStart.sh
      timeout: 300
      runas: ubuntu
   ApplicationStop:
-   - location: ./infrastructure/aws/codedeploy/applicationStop.sh
+   - location: ./codedeploy/applicationStop.sh
      timeout: 300
      runas: ubuntu

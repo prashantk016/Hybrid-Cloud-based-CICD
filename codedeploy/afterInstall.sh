@@ -7,4 +7,4 @@ ls /app -a
 sudo unzip app/s.zip /webapp
 echo "files inside webapp folder"
 ls /webapp -a
-cd webapp/Homeworks.dll
+dotnet webapp/Homeworks.dll
