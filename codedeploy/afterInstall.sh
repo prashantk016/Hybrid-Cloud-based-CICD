@@ -8,5 +8,8 @@ ls /app -a
 sudo unzip -o /app/s.zip -d /webapp
 echo "---files inside webapp folder---"
 ls /webapp -a
-cd /
-./startapp.sh
+sudo nohup dotnet /webapp/Homeworks.dll urls="http://*:5000" > /dev/null 2>&1 & 
+sleep 3
+echo -ne '\n'
+echo -ne '\n'
+echo "---Webapp started---"
