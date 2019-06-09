@@ -1,12 +1,15 @@
 #!/bin/bash
-kill $(ps aux | grep 'Homeworks.dll' | awk '{print $2}')
+sudo kill $(ps aux | grep 'Homeworks.dll' | awk '{print $2}')
 echo "---Webapp stopped---"
 sudo rm -rf /webapp
 ls -a
 echo "---files inside app folder---"
 ls /app -a
-sudo unzip -o /app/s.zip -d /webapp   
+sudo unzip -o /app/s.zip -d /webapp
 echo "---files inside webapp folder---"
 ls /webapp -a
-nohup dotnet /webapp/Homeworks.dll urls="http://*:5000" &
+sudo nohup dotnet /webapp/Homeworks.dll urls="http://*:5000" &
+sleep 3
+echo -ne '\n'
+echo -ne '\n'
 echo "---Webapp started---"
