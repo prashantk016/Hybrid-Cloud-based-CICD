@@ -28,10 +28,23 @@ steps:
     pwd
     ls
     mkdir codedeploy_artifact
+    mkdir published
   displayName: pwd and ls
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(publish_path)'
+    zipAfterPublish: true
+
 - script: |
-    zip -r csye7220-$(Build.BuildId).zip ./
+    pwd
+    ls -alh published/
+  displayName: pwd and ls 
+
+- script: |
+    zip -r csye7220-$(Build.BuildId).zip published/*.zip appspec.yml codedeploy/*
     mv csye7220-$(Build.BuildId).zip codedeploy_artifact/
     ls codedeploy_artifact/
   displayName: Zip Artifacts
