@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: published/s.zip
-    destination: /app
+    destination: /app/
 hooks:
   AfterInstall:
    - location: ./codedeploy/afterInstall.sh
